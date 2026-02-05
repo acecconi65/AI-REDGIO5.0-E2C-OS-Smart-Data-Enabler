@@ -1,16 +1,60 @@
 # AI-REDGIO5.0-E2C-OS-Smart-Data-Enabler
 
-Smart Data Enabler is a basic stack consisting in an AI Edge-to-Cloud (E2C) minimum viable application using AI REDGIO 5.0 recommendend Open Source (OS) tools. 
+Smart Data Enabler is a basic stack consisting in an AI Edge-to-Cloud (E2C) minimum viable application using AI REDGIO 5.0 recommendend Open-Source (OS) tools. 
 
 It is a technological demo showing how a very simple architecture based on open source tools recommended in the project allows SMEs to obtain useful analytical insights from their process data even in conditions of limited maturity and complexity, with reduced technological skills and practically zero costs/investments.
 
-This guide explains how to deploy the application using Docker Compose. 
-The application is packaged as a prebuilt Docker image, and all necessary configurations are provided in the .env file.
+## Scenario
+
+Smart Data Enabler (SDE) application goal is to demonstrate how a SMEs can easily run the following steps in order to conduct an initial exploration and analysis of their (edge) production data. 
+
+<img width="499" height="347" alt="SDA-UC" src="https://github.com/user-attachments/assets/4d30920b-940e-47c5-acde-972eaa215a2f" />
+
+Production data can be a JSON file like this:
+```
+{
+  "operation": "shift",
+  "spec": {
+    "deviceId": “sensor-001",
+    "timestamp": "2025-12-10 10:56:02",
+    "readings": {
+      "temperature": "12.4",
+      "humidity": "4.2",
+      "pressure": "18.5",
+      "battery": "-1.12"
+    },
+    "status": "OK"
+  }
+}
+```
 
 ## Architecture
 
+The application stack is composed by the following open-source technologies, whose (integrated) usage is recommended by AIREDGIO 5.0 project:
+- [Apache NiFi](https://nifi.apache.org/): easy to use, powerful, and reliable open-source system to process and distribute data, particularly suitable for integrating IoT data sources
+- [MinIO](https://www.min.io/): high-performance, software-defined Object Storage server, a sort of an open-source, private version of Amazon S3
+- [InfluxDB](https://www.influxdata.com/): specialized open-source database designed to handle data that is indexed by time, fitting best when capturing streams of measurements coming from a sensors
+- [Grafana](https://grafana.com/): open-source visualization and analytics platform, allowing you to query, visualize, alert on, and understand your metrics no matter where they are stored
 
+and this is how the scenario turns into architecture, leveraging the previous technologies:
 
+<img width="728" height="437" alt="SDA-AR" src="https://github.com/user-attachments/assets/6d2f58bd-c47c-4373-b79f-4052da3a0750" />
+
+Nevertheless, the architecture is ready for various types of improvements thanks to AI.
+
+## Use Cases
+
+Smart Data Enabler application consists of a base stack and four use cases on top:
+
+(TABLE)
+
+The following content is a guide explaining how to deploy the application using Docker Compose. 
+The application is packaged as a prebuilt Docker image, and all necessary configurations are provided in the .env file.
+Then you can follow the Use Cases folders provided in order to easily prepare and run a specific use case. 
+
+(DIRE CHE LO SCOPO DI QUESTA APPLICAZIONE E' ANCHE QUELLO DI INVITARE A CREARE IL PROPRIO USE CASE) 
+
+***
 
 ## Prerequisites
 Before you begin, ensure the following are installed on your system:
@@ -29,10 +73,10 @@ Install Docker Compose by following the official guide: [Install Docker Compose]
 
 ### Step 1: Prepare the Deployment Directory
 
-Create a directory for the deployment files:
+Create a directory for the deployment files (replace _your-app-deployment_ with a name of your choice):
 ```
-mkdir _your-app-deployment_
-cd _your-app-deployment_
+mkdir your-app-deployment
+cd your-app-deployment
 ```
 Copy the following files into the directory:
 - docker-compose.yml (provided in this repository)
