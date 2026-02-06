@@ -8,7 +8,7 @@ Monitoring of a critical electrical panel (three-phase electrical system)
 - input data directly injected into a NiFi pipeline’s processor 
 
 ## Use Case scenario/operation:
-Four IoT sensors – one for each phase R, S, T and Neutral - positioned inside a critical high-voltage substation wide electrical panel, a cooled environment for which it is fundamental to check data in order to highlight anomalies.<br>
+Four IIoT sensors – one for each phase R, S, T and Neutral - positioned inside a critical high-voltage substation wide electrical panel, a cooled environment for which it is fundamental to check data in order to highlight anomalies.<br>
 In highly critical industrial or infrastructure scenarios (hospitals, data centres, power stations), the use of a single sensor is often considered a single point of failure.<br>
 Installing four sensors on a single electrical panel allows for the implementation of redundancy and differentiated monitoring logic.<br>
 The objective is to detect whether one of the terminals is loosening (causing an increase in resistance and therefore heat) before an electric arc is triggered: if the temperature of phase R is significantly higher than the others, the system generates a predictive maintenance alarm.
@@ -57,8 +57,9 @@ In NiFi WebUI:
 <img width="467" height="266" alt="NiFi-Loading" src="https://github.com/user-attachments/assets/973528b6-0a4d-4343-a37f-e62b5d724485" /><br>
 - upload file air5-eda-uc1-pipeline.json, the pipeline will be placed in the canvas:<br>
 <img width="346" height="162" alt="NiFi-UC1" src="https://github.com/user-attachments/assets/03aaa9e4-888a-45a2-93d9-91b28ec0c886" /><br>
-- double click on the Process Group, the overall detailed pipeline will be shown, ready to be activated:<br>
+- double click on the Process Group, the overall detailed pipeline will be shown, with the evidence of all the steps, ready to be activated:<br>
 <img width="1583" height="628" alt="NiFi-UC1-pipeline" src="https://github.com/user-attachments/assets/d15ca0de-8e4f-40b4-9ad2-25cf10c37846" /><br>
+Step/processor's configuration and properties are reachable right-clicking on the processor itself and selecting "Configure"
 
 ### Creating the MinIO bucket for data:
 In MinIO WebUI:
@@ -70,11 +71,31 @@ In InfluxDB WebUI:
   
 ### Inporting the Grafana dashboard:
 In Grafana WebUI:
+- import file air5-eda-uc1-dashb-1770387903460.json using the import feature under New menu on the upper right:<br>
+<img width="1913" height="235" alt="Grafana-Import" src="https://github.com/user-attachments/assets/982e31d1-b2c8-4d53-aed3-ad263f49ca8e" />
 
+[PROBABILMENTE DA COMPLETARE]
 
-air5-eda-uc1-dashb
-
-## NiFi pipeline description:
+## NiFi pipeline description: [AGGIUNGERE I NOMI DEI PROCESSORS?]
+Going back to NiFi WebUI, let's give a detail to all the pipeline steps:
+- step 1:  submitting the source JSON dataset to the application
+as anticipated in "Use Case reference" section above, and as you can check going to the Properties tab of processor's configuration and right-clicking on "Custom text" field, the source dataset is directly inserted internally to the pipeline:<br>
+<img width="1270" height="612" alt="NiFi-CustomText" src="https://github.com/user-attachments/assets/753c2d64-c9f2-4081-b66a-6f8b6335d88c" /><br><br>
+This step leads to two flows: the first one (2a) intends to store original data (for backup or further analysis reasons) into a MinIO storage area, the second one (2b to 8) represents the core application path (from data to analysis)<br>
+In order to be easily stored into InfluxDB, JSON data are to be transformed into Line Protocol format - the most suitable data format expected by InfluxDB. As an example, the JSON file in the "IIoT input data shape" section has this Line Protocol representation:<br>
+```
+environment,deviceId=sensor-R,status=operational temperature=12.4,humidity=6.2,pressure=18.5,battery=3.31 1762772162000000000
+```
+where the last value represents the epoch (nanoseconds) conversion of timestamp format.<br>
+Steps from 2a to 5 implement the transformation "record per record".<br>
+- step 2a: storing data into the MinIO bucket
+- step 2b: splitting JSON data per single record
+- step 3:  extracting single fields from records
+- step 4:  normalizing timestamp field
+- step 5:  converting JSON data into Line Protocol format (InfluxDB friendly)
+- step 6:  merging data to submit to InfluxDB
+- step 7:  writing data into InfluxDB
+- step 8:  logging InfluxDB transactions
 
 ***
 
