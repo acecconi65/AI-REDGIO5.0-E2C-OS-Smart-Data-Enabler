@@ -32,14 +32,14 @@ The objective is to detect whether one of the terminals is loosening (causing an
 ```
 
 ## IIoT input data description and reference values/range used in the demo:
-- operation: representing the process operation, always equal to "EP-G02-monitoring"
-- device ID: one of the four EP sensors’ serial code, can be one of “sensor-R" o “sensor-S" o “sensor-T" o “sensor-N"
-- timestamp: time of measurement collection, can be a value between 00:00 and 23:59 on 2025-11-10
-- temperature: the optimal operational range is 10.0-13.0 [°C], indicating a cooled environment
-- humidity: the optimal operational range is 5.0-7.4 mbar for low (10.0 °C) temperatures, that is to be maintained to prevent electric arcs or partial discharges due to condensation and prevent both condensation and electrostatic discharge - at 10 °C, the air is ‘saturated’ (i.e. it reaches 100% humidity and begins to form condensation) when the water vapour pressure reaches approximately 12.3 mbar.
-- pressure: the optimal operational range is 10.0-20.0 mbar – in highly critical electrical cabinets, the interior of the cabinet is maintained at a pressure slightly higher than the external pressure using nitrogen or filtered dry air - if the pressure drops, it means that the seals on the panel are worn or that a door has been left open - maintaining positive pressure prevents conductive dust, corrosive vapours or external moisture from entering, drastically reducing the risk of electric arcs.
-- battery: the optimal operational range is 3.3-3.6 V for low (10.0 °C) temperatures – values lower than 3.0 V have to be considered as alarm, requiring immediate technical intervention
-- (device) status:  describing normal or alert/critical situations related to the values detected (voltage, current, terminal temperature):
+- **operation**: representing the process operation, always equal to "EP-G02-monitoring"
+- **device ID**: one of the four EP sensors’ serial code, can be one of “sensor-R" o “sensor-S" o “sensor-T" o “sensor-N"
+- **timestamp**: time of measurement collection, can be a value between 00:00 and 23:59 on 2025-11-10
+- **temperature**: the optimal operational range is 10.0-13.0 [°C], indicating a cooled environment
+- **humidity**: the optimal operational range is 5.0-7.4 mbar for low (10.0 °C) temperatures, that is to be maintained to prevent electric arcs or partial discharges due to condensation and prevent both condensation and electrostatic discharge - at 10 °C, the air is ‘saturated’ (i.e. it reaches 100% humidity and begins to form condensation) when the water vapour pressure reaches approximately 12.3 mbar.
+- **pressure**: the optimal operational range is 10.0-20.0 mbar – in highly critical electrical cabinets, the interior of the cabinet is maintained at a pressure slightly higher than the external pressure using nitrogen or filtered dry air - if the pressure drops, it means that the seals on the panel are worn or that a door has been left open - maintaining positive pressure prevents conductive dust, corrosive vapours or external moisture from entering, drastically reducing the risk of electric arcs.
+- **battery**: the optimal operational range is 3.3-3.6 V for low (10.0 °C) temperatures – values lower than 3.0 V have to be considered as alarm, requiring immediate technical intervention
+- **(device) status**:  describing normal or alert/critical situations related to the values detected (voltage, current, terminal temperature):
   - “operational”: normal 
   - “warning”: the value is outside the optimal range, but the system is still safe
   - “critical”: an imminent danger threshold has been exceeded
@@ -50,24 +50,29 @@ The objective is to detect whether one of the terminals is loosening (causing an
 ## Demo configuration:
 
 ### Importing the NiFi pipeline:
-In NiFi UI:
-- drag a new Process Group in the canvas:
-<img width="478" height="126" alt="NiFI-ProcessGroup" src="https://github.com/user-attachments/assets/eb5c908b-a3d1-4901-8ae4-a79b80b49436" />
-- clic on the right side icon in the Field name: 
-<img width="467" height="266" alt="NiFi-Loading" src="https://github.com/user-attachments/assets/973528b6-0a4d-4343-a37f-e62b5d724485" />
-- upload file air5-eda-uc1-pipeline.json
-  
-- the pipeline will be placed in the canvas:
-  
-
--
+In NiFi WebUI:
+- drag a new Process Group in the canvas<br>
+<img width="478" height="126" alt="NiFI-ProcessGroup" src="https://github.com/user-attachments/assets/eb5c908b-a3d1-4901-8ae4-a79b80b49436" /><br>
+- click on the right side icon in the Field name:<br> 
+<img width="467" height="266" alt="NiFi-Loading" src="https://github.com/user-attachments/assets/973528b6-0a4d-4343-a37f-e62b5d724485" /><br>
+- upload file air5-eda-uc1-pipeline.json, the pipeline will be placed in the canvas:<br>
+<img width="346" height="162" alt="NiFi-UC1" src="https://github.com/user-attachments/assets/03aaa9e4-888a-45a2-93d9-91b28ec0c886" /><br>
+- double click on the Process Group, the overall detailed pipeline will be shown, ready to be activated:<br>
+<img width="1583" height="628" alt="NiFi-UC1-pipeline" src="https://github.com/user-attachments/assets/d15ca0de-8e4f-40b4-9ad2-25cf10c37846" /><br>
 
 ### Creating the MinIO bucket for data:
-
+In MinIO WebUI:
+- create a bucket named "air5-eda-uc1-bucket"
+  
 ### Creating the InfluxDB bucket for data:
+In InfluxDB WebUI:
+- create a bucket named "air5-eda-uc1-data"
+  
+### Inporting the Grafana dashboard:
+In Grafana WebUI:
 
-### Creating the Grafana dashboard:
 
+air5-eda-uc1-dashb
 
 ## NiFi pipeline description:
 
