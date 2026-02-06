@@ -1,0 +1,89 @@
+Esempio SenML: Serie Storica (50 istanti successivi)
+
+[
+  {
+    "bn": "urn:dev:mac:00:15:23:ac:82:11:",
+    "bt": 1734645120,
+    "bu": "Cel"
+  },
+  { "n": "temp", "v": 21.8, "t": 0 }, { "n": "hum", "v": 42.5, "t": 0, "u": "%EL" },
+  { "n": "temp", "v": 21.9, "t": 60 }, { "n": "hum", "v": 42.6, "t": 60, "u": "%EL" },
+  { "n": "temp", "v": 22.0, "t": 120 }, { "n": "hum", "v": 42.6, "t": 120, "u": "%EL" },
+  { "n": "temp", "v": 22.1, "t": 180 }, { "n": "hum", "v": 42.7, "t": 180, "u": "%EL" },
+  { "n": "temp", "v": 22.2, "t": 240 }, { "n": "hum", "v": 42.8, "t": 240, "u": "%EL" },
+  { "n": "temp", "v": 22.1, "t": 300 }, { "n": "hum", "v": 42.8, "t": 300, "u": "%EL" },
+  { "n": "temp", "v": 22.0, "t": 360 }, { "n": "hum", "v": 42.9, "t": 360, "u": "%EL" },
+  { "n": "temp", "v": 21.9, "t": 420 }, { "n": "hum", "v": 43.0, "t": 420, "u": "%EL" },
+  { "n": "temp", "v": 21.8, "t": 480 }, { "n": "hum", "v": 43.1, "t": 480, "u": "%EL" },
+  { "n": "temp", "v": 21.7, "t": 540 }, { "n": "hum", "v": 43.1, "t": 540, "u": "%EL" },
+  { "n": "temp", "v": 21.6, "t": 600 }, { "n": "hum", "v": 43.2, "t": 600, "u": "%EL" },
+  { "n": "temp", "v": 21.5, "t": 660 }, { "n": "hum", "v": 43.3, "t": 660, "u": "%EL" },
+  { "n": "temp", "v": 21.5, "t": 720 }, { "n": "hum", "v": 43.4, "t": 720, "u": "%EL" },
+  { "n": "temp", "v": 21.6, "t": 780 }, { "n": "hum", "v": 43.5, "t": 780, "u": "%EL" },
+  { "n": "temp", "v": 21.7, "t": 840 }, { "n": "hum", "v": 43.5, "t": 840, "u": "%EL" },
+  { "n": "temp", "v": 21.8, "t": 900 }, { "n": "hum", "v": 43.6, "t": 900, "u": "%EL" },
+  { "n": "temp", "v": 21.9, "t": 960 }, { "n": "hum", "v": 43.7, "t": 960, "u": "%EL" },
+  { "n": "temp", "v": 22.0, "t": 1020 }, { "n": "hum", "v": 43.8, "t": 1020, "u": "%EL" },
+  { "n": "temp", "v": 22.1, "t": 1080 }, { "n": "hum", "v": 43.9, "t": 1080, "u": "%EL" },
+  { "n": "temp", "v": 22.2, "t": 1140 }, { "n": "hum", "v": 44.0, "t": 1140, "u": "%EL" },
+  { "n": "temp", "v": 22.3, "t": 1200 }, { "n": "hum", "v": 44.1, "t": 1200, "u": "%EL" },
+  { "n": "temp", "v": 22.4, "t": 1260 }, { "n": "hum", "v": 44.2, "t": 1260, "u": "%EL" },
+  { "n": "temp", "v": 22.5, "t": 1320 }, { "n": "hum", "v": 44.3, "t": 1320, "u": "%EL" },
+  { "n": "temp", "v": 22.5, "t": 1380 }, { "n": "hum", "v": 44.4, "t": 1380, "u": "%EL" },
+  { "n": "temp", "v": 22.4, "t": 1440 }, { "n": "hum", "v": 44.5, "t": 1440, "u": "%EL" },
+  { "n": "temp", "v": 22.3, "t": 1500 }, { "n": "hum", "v": 44.6, "t": 1500, "u": "%EL" },
+  { "n": "temp", "v": 22.2, "t": 1560 }, { "n": "hum", "v": 44.6, "t": 1560, "u": "%EL" },
+  { "n": "temp", "v": 22.1, "t": 1620 }, { "n": "hum", "v": 44.7, "t": 1620, "u": "%EL" },
+  { "n": "temp", "v": 22.0, "t": 1680 }, { "n": "hum", "v": 44.8, "t": 1680, "u": "%EL" },
+  { "n": "temp", "v": 21.9, "t": 1740 }, { "n": "hum", "v": 44.9, "t": 1740, "u": "%EL" },
+  { "n": "temp", "v": 21.8, "t": 1800 }, { "n": "hum", "v": 45.0, "t": 1800, "u": "%EL" },
+  { "n": "temp", "v": 21.8, "t": 1860 }, { "n": "hum", "v": 45.1, "t": 1860, "u": "%EL" },
+  { "n": "temp", "v": 21.9, "t": 1920 }, { "n": "hum", "v": 45.1, "t": 1920, "u": "%EL" },
+  { "n": "temp", "v": 22.0, "t": 1980 }, { "n": "hum", "v": 45.2, "t": 1980, "u": "%EL" },
+  { "n": "temp", "v": 22.1, "t": 2040 }, { "n": "hum", "v": 45.3, "t": 2040, "u": "%EL" },
+  { "n": "temp", "v": 22.2, "t": 2100 }, { "n": "hum", "v": 45.4, "t": 2100, "u": "%EL" },
+  { "n": "temp", "v": 22.3, "t": 2160 }, { "n": "hum", "v": 45.5, "t": 2160, "u": "%EL" },
+  { "n": "temp", "v": 22.4, "t": 2220 }, { "n": "hum", "v": 45.6, "t": 2220, "u": "%EL" },
+  { "n": "temp", "v": 22.5, "t": 2280 }, { "n": "hum", "v": 45.7, "t": 2280, "u": "%EL" },
+  { "n": "temp", "v": 22.6, "t": 2340 }, { "n": "hum", "v": 45.8, "t": 2340, "u": "%EL" },
+  { "n": "temp", "v": 22.7, "t": 2400 }, { "n": "hum", "v": 45.9, "t": 2400, "u": "%EL" },
+  { "n": "temp", "v": 22.8, "t": 2460 }, { "n": "hum", "v": 46.0, "t": 2460, "u": "%EL" },
+  { "n": "temp", "v": 22.9, "t": 2520 }, { "n": "hum", "v": 46.1, "t": 2520, "u": "%EL" },
+  { "n": "temp", "v": 23.0, "t": 2580 }, { "n": "hum", "v": 46.2, "t": 2580, "u": "%EL" },
+  { "n": "temp", "v": 23.1, "t": 2640 }, { "n": "hum", "v": 46.3, "t": 2640, "u": "%EL" },
+  { "n": "temp", "v": 23.2, "t": 2700 }, { "n": "hum", "v": 46.4, "t": 2700, "u": "%EL" },
+  { "n": "temp", "v": 23.3, "t": 2760 }, { "n": "hum", "v": 46.5, "t": 2760, "u": "%EL" },
+  { "n": "temp", "v": 23.4, "t": 2820 }, { "n": "hum", "v": 46.6, "t": 2820, "u": "%EL" },
+  { "n": "temp", "v": 23.5, "t": 2880 }, { "n": "hum", "v": 46.7, "t": 2880, "u": "%EL" },
+  { "n": "temp", "v": 23.6, "t": 2940 }, { "n": "hum", "v": 46.8, "t": 2940, "u": "%EL" },
+  { "n": "temp", "v": 23.7, "t": 3000 }, { "n": "hum", "v": 46.9, "t": 3000, "u": "%EL" }
+]
+
+
+
+
+- Variazione Temporale (t): L'ultimo record arriva a t: 3000, che equivale a 50 campionamenti distanziati di 1 minuto l'uno dall'altro.
+
+- Trend dei Dati: Ho introdotto una leggera deriva positiva sia per la temperatura (da 21.8 a 23.7) che per l'umidità. In ambito di manutenzione, un trend costante verso l'alto come questo potrebbe indicare un carico di lavoro crescente nel Data Center o un'efficienza in calo del sistema di condizionamento.
+
+- Struttura Delta-Time: Ho mantenuto la logica bt (Base Time) all'inizio, con i successivi t che rappresentano l'offset in secondi.
+
+
+
+
+
+
+
+usando NiFI, voglio inserire su influxdb il seguente dataset tramite il processore InvokeHttp :
+[
+  {
+    "bn": "urn:dev:mac:00:15:23:ac:82:11:",
+    "bt": 1734645120,
+    "bu": "Cel"
+  },
+  { "n": "temp", "v": 21.8, "t": 0 }, { "n": "hum", "v": 42.5, "t": 0, "u": "%EL" },
+  { "n": "temp", "v": 21.9, "t": 60 }, { "n": "hum", "v": 42.6, "t": 60, "u": "%EL" },
+  { "n": "temp", "v": 22.0, "t": 120 }, { "n": "hum", "v": 42.6, "t": 120, "u": "%EL" },
+  { "n": "temp", "v": 22.1, "t": 180 }, { "n": "hum", "v": 42.7, "t": 180, "u": "%EL" }
+]
+cosa devo fare?
