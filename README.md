@@ -110,11 +110,11 @@ docker-compose up -d
 - NiFi:
 Open a browser, navigate to [https://localhost:8443/nifi](https://localhost:8443/nifi) then access with credentials provided in the .env file.
 - MinIO:
-Open a browser, navigate to [https://localhost:9001](https://localhost:9001) then access with credentials provided in the .env file.
+Open a browser, navigate to [http://localhost:9001](http://localhost:9001) then access with credentials provided in the .env file.
 - InfluxDB:
-Open a browser, navigate to [https://localhost:8086](https://localhost:8086) then access with credentials provided in the .env file.
+Open a browser, navigate to [http://localhost:8086](http://localhost:8086) then access with credentials provided in the .env file.
 - Grafana:
-Open a browser, navigate to [https://localhost:3000](https://localhost:3000) then access with credentials provided in the .env file.
+Open a browser, navigate to [http://localhost:3000](http://localhost:3000) then access with credentials provided in the .env file.
 
 ### Stopping the Application
 To stop the application, run:
