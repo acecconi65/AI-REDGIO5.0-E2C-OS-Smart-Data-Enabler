@@ -79,10 +79,10 @@ In Grafana WebUI:
 ## NiFi pipeline description: [AGGIUNGERE I NOMI DEI PROCESSORS?]
 Going back to NiFi WebUI, let's give a detail to all the pipeline steps:
 - step 1:  submitting the source JSON dataset to the application
-as anticipated in "Use Case reference" section above, and as you can check going to the Properties tab of processor's configuration and right-clicking on "Custom text" field, the source dataset is directly inserted internally to the pipeline:<br>
+as anticipated in "Use Case reference" section above, and as you can check going to the Properties tab of processor's configuration and right-clicking on "Custom text" field, the source dataset is directly inserted internally to the pipeline:<br><br>
 <img width="1270" height="612" alt="NiFi-CustomText" src="https://github.com/user-attachments/assets/753c2d64-c9f2-4081-b66a-6f8b6335d88c" /><br><br>
-This step leads to two flows: the first one (2a) intends to store original data (for backup or further analysis reasons) into a MinIO storage area, the second one (2b to 8) represents the core application path (from data to analysis)<br>
-In order to be easily stored into InfluxDB, JSON data are to be transformed into Line Protocol format - the most suitable data format expected by InfluxDB. As an example, the JSON file in the "IIoT input data shape" section has this Line Protocol representation:<br>
+This step leads to two flows: the first one (2a) intends to store original data (for backup or further analysis reasons) into a MinIO storage area, the second one (2b to 8) represents the core application path (from data to analysis)<br><br>
+In order to be easily stored into InfluxDB, JSON data are transformed into Line Protocol format - the most suitable data format expected by InfluxDB. As an example, the JSON file in the "IIoT input data shape" section has this Line Protocol representation:<br>
 ```
 environment,deviceId=sensor-R,status=operational temperature=12.4,humidity=6.2,pressure=18.5,battery=3.31 1762772162000000000
 ```
