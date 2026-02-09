@@ -45,8 +45,12 @@ Nevertheless, the architecture is ready for various types of improvements thanks
 ## Use Cases
 
 Smart Data Enabler application consists of a base stack and four use cases on top:
-
-(TABLE)
+|Nr|                                   Title|                                    Folder|                                                                                                              Type|        NiFi pipeline| MinIO bucket| InfluxDB bucket| Grafana dashboard|                                                     
+|-:|---------------------------------------:|-----------------------------------------:|-----------------------------------------------------------------------------------------------------------------:|--------------------:|-------------:|----------------------------:|---------------------------:|
+| 1|Electrical panel monitoring (small data)|uc1-electrical_panel_monitoring-small_data|Small dataset (100 records), IIoT shape type A, JSON format, data directly injected into NiFi pipeline’s processor|air5-eda-uc1-pipeline|air5-eda-uc1-bucket|air5-eda-uc1-data|air5-eda-uc1-dashb|
+| 2|    Data Center environmental monitoring|uc2-dc_environmental_monitoring-small_data|Small dataset (100 records), IIoT shape type B, JSON format, data directly injected into NiFi pipeline’s processor|air5-eda-uc2-pipeline|air5-eda-uc2-bucket|air5-eda-uc2-data|air5-eda-uc2-dashb|
+| 3|Electrical panel monitoring (large data)|   uc3-electrical_panel_monitoring-large_data|Large dataset (4000 records), IIoT shape type A, JSON format, data read from file on disk|air5-eda-uc3-pipeline|  air5-eda-uc3-bucket|   air5-eda-uc3-data|air5-eda-uc3-dashb|
+| 4|                         Robotic arm telemetry|   uc4-robotic_arm_telemetry-large_data|Large dataset (10000 records), IIoT shape type C, CSV format, data read from file on disk|air5-eda-uc4-pipeline|  air5-eda-uc4-bucket|air5-eda-uc4-data|air5-eda-uc4-dashb|
 
 The following content is a guide explaining how to deploy the application using Docker Compose. 
 The application is packaged as a prebuilt Docker image, and all necessary configurations are provided in the .env file.
