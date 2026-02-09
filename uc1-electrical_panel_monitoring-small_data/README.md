@@ -75,9 +75,10 @@ In Grafana WebUI:
 - import file air5-eda-uc1-dashb-1770387903460.json using the import feature under New menu on the upper right:<br>
 <img width="1913" height="235" alt="Grafana-Import" src="https://github.com/user-attachments/assets/982e31d1-b2c8-4d53-aed3-ad263f49ca8e" />
 
-[PROBABILMENTE DA COMPLETARE]
+It is important to highlight that the import process includes both the creation of the dashboard analytics templates and the configuration of the connection to InfluxDB data, as it can be quite under:
+<img width="1664" height="550" alt="Grafana - Influx" src="https://github.com/user-attachments/assets/d303eb94-db6d-44e4-8ac6-5f90b7618dc8" />
 
-## NiFi pipeline description: [AGGIUNGERE I NOMI DEI PROCESSORS?]
+## NiFi pipeline description:
 Going back to NiFi WebUI, let's give a detail to all the pipeline steps:
 - step 1:  submitting the source JSON dataset to the application
 as anticipated in "Use Case reference" section above, and as you can check going to the Properties tab of processor's configuration and right-clicking on "Custom text" field, the source dataset is directly inserted internally to the pipeline:<br><br>
@@ -119,4 +120,46 @@ In InfluxDB WebUI:
 <img width="1893" height="795" alt="Screenshot 2026-02-09 alle 12 43 59" src="https://github.com/user-attachments/assets/7349cc28-f236-4bb2-bfd7-9f53a96efa74" />
 
 ### Visualizing analytics with Grafana:
-In Grafana WebUI:
+In Grafana WebUI, the dashboard previously imported will provide the following four analytics, all related to the time range 2025-11-10 00:00:00 - 2025-11-10 23:59:00:<br>
+<img width="1610" height="955" alt="Grafana dashb 1" src="https://github.com/user-attachments/assets/17d625e8-c2cf-400a-8843-90a8281193ff" />
+
+Let's examine each analytic in detail.
+
+**1. Overall measures in time range (time series):** this analytic visualizes all the measures included in the given time range.
+<img width="1908" height="943" alt="Grafana dashb 2" src="https://github.com/user-attachments/assets/b2cb1ace-daa9-4395-8363-4b8e21f8b841" />
+InfluxDB query underlying the analytic:
+```
+from(bucket: "air5-eda-uc1-data")
+|> range(start: v.timeRangeStart, stop: v.timeRangeStop)
+```
+**2. Focus on measures: temperature (time series):** this analytic visualizes the temperature trend (for a specific sensor) in the given time range, with evidence of outliers.
+InfluxDB query underlying the analytic:
+```
+from(bucket: "air5-eda-uc1-data")
+|> range(start: v.timeRangeStart, stop: v.timeRangeStop)
+|> filter(fn: (r) => r["deviceId"] == "sensor-R")
+|> filter(fn: (r) => r["_field"] == "pressure")
+|> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)
+|> yield(name: "pression_phase_R")
+```
+**3. Focus on measures: pressure (time series):** this analytic visualizes the temperature trend (for a specific sensor) in the given time range, with evidence of outliers.
+InfluxDB query underlying the analytic:
+```
+from(bucket: "air5-eda-uc1-data")
+|> range(start: v.timeRangeStart, stop: v.timeRangeStop)
+// Specific filter for sensor R
+|> filter(fn: (r) => r["deviceId"] == "sensor-R")
+|> filter(fn: (r) => r["_field"] == "temperature")
+|> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)
+|> yield(name: "temperature_phase_R")
+```
+**4. Measures per operative status in time range (pie chart):** this analytic monitors status changes in the given time range, with evidence of which sensor is reporting statuses other than normal (‘operational’) and how often.
+InfluxDB query underlying the analytic:
+```
+from(bucket: "air5-eda-uc1-data")
+|> range(start: v.timeRangeStart, stop: v.timeRangeStop)
+|> filter(fn: (r) => r["_field"] == "temperature") 
+|> group(columns: ["status"])
+|> count()
+|> yield(name: "status_count")
+```
