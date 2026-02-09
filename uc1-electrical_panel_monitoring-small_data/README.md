@@ -55,7 +55,7 @@ In NiFi WebUI:
 <img width="478" height="126" alt="NiFI-ProcessGroup" src="https://github.com/user-attachments/assets/eb5c908b-a3d1-4901-8ae4-a79b80b49436" /><br>
 - click on the right side icon in the Field name:<br> 
 <img width="467" height="266" alt="NiFi-Loading" src="https://github.com/user-attachments/assets/973528b6-0a4d-4343-a37f-e62b5d724485" /><br>
-- upload file air5-eda-uc1-pipeline.json, the pipeline will be placed in the canvas:<br>
+- upload file **air5-eda-uc1-pipeline.json** the pipeline will be placed in the canvas:<br>
 <img width="346" height="162" alt="NiFi-UC1" src="https://github.com/user-attachments/assets/03aaa9e4-888a-45a2-93d9-91b28ec0c886" /><br>
 - double click on the Process Group, the overall detailed pipeline will be shown, with the evidence of all the steps, ready to be activated:<br>
 <img width="1583" height="628" alt="NiFi-UC1-pipeline" src="https://github.com/user-attachments/assets/d15ca0de-8e4f-40b4-9ad2-25cf10c37846" />
@@ -72,7 +72,7 @@ In InfluxDB WebUI:
   
 ### Importing the Grafana dashboard:
 In Grafana WebUI:
-- import file air5-eda-uc1-dashb-1770387903460.json using the import feature under New menu on the upper right:<br>
+- import file **air5-eda-uc1-dashb-1770387903460.json** using the import feature under New menu on the upper right:<br>
 <img width="1913" height="235" alt="Grafana-Import" src="https://github.com/user-attachments/assets/982e31d1-b2c8-4d53-aed3-ad263f49ca8e" />
 
 It is important to highlight that the import process includes both the creation of the dashboard analytics templates and the configuration of the connection to InfluxDB data, as it can be quite under:
