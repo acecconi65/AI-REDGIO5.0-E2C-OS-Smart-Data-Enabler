@@ -56,7 +56,7 @@ The following content is a guide explaining how to deploy the application using 
 The application is packaged as a prebuilt Docker image, and all necessary configurations are provided in the .env file.
 Then you can follow the Use Cases folders provided in order to easily prepare and run a specific use case. 
 
-(DIRE CHE LO SCOPO DI QUESTA APPLICAZIONE E' ANCHE QUELLO DI INVITARE A CREARE IL PROPRIO USE CASE) 
+I hope this application will be a good starting point for you to see for yourself how easy it is to convert your use case data into insights!  
 
 ***
 
