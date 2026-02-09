@@ -58,8 +58,9 @@ In NiFi WebUI:
 - upload file air5-eda-uc1-pipeline.json, the pipeline will be placed in the canvas:<br>
 <img width="346" height="162" alt="NiFi-UC1" src="https://github.com/user-attachments/assets/03aaa9e4-888a-45a2-93d9-91b28ec0c886" /><br>
 - double click on the Process Group, the overall detailed pipeline will be shown, with the evidence of all the steps, ready to be activated:<br>
-<img width="1583" height="628" alt="NiFi-UC1-pipeline" src="https://github.com/user-attachments/assets/d15ca0de-8e4f-40b4-9ad2-25cf10c37846" /><br>
-Step/processor's configuration and properties are reachable right-clicking on the processor itself and selecting "Configure"
+<img width="1583" height="628" alt="NiFi-UC1-pipeline" src="https://github.com/user-attachments/assets/d15ca0de-8e4f-40b4-9ad2-25cf10c37846" />
+<br>
+Step/processor's configuration and properties are reachable right-clicking on the processor itself and selecting "Configure".
 
 ### Creating the MinIO bucket for data:
 In MinIO WebUI:
@@ -69,7 +70,7 @@ In MinIO WebUI:
 In InfluxDB WebUI:
 - create a bucket named "air5-eda-uc1-data"
   
-### Inporting the Grafana dashboard:
+### Importing the Grafana dashboard:
 In Grafana WebUI:
 - import file air5-eda-uc1-dashb-1770387903460.json using the import feature under New menu on the upper right:<br>
 <img width="1913" height="235" alt="Grafana-Import" src="https://github.com/user-attachments/assets/982e31d1-b2c8-4d53-aed3-ad263f49ca8e" />
@@ -102,9 +103,20 @@ Steps from 2a to 5 implement the transformation "record per record".<br>
 ## Running the demo:
 
 ### NiFi pipeline activation:
+In NiFi WebUI:
+1. Activate (right-click on the processor, then select "Start": the red square icon will turn into a green arrow icon) all the processors except step 1 "Submitting IoT dataset use case 1"
+2. Activate processor step 1 for 2 seconds then deactivate it (just to trigger data start flowing along the pipeline)
+3. Check the value of "Tasks/Time" in the processors step 7 and 8: when they are no longer equal to zero, it means that the pipeline is complete
 
 ### Sending IIoT data to MinIO:
+In MinIO WebUI:
+- the input dataset has been sent to the bucket previously created:
+<img width="1620" height="402" alt="MinIO-file" src="https://github.com/user-attachments/assets/b7107ce9-13a9-45b3-bd0f-9756845ecbce" />
 
 ### Storing process data in InfluxDB database:
+In InfluxDB WebUI:
+- going to Data Explorer environment and selecting from 2025-11-10 00:00:00 to 2025-11-10 23:59:00 as the custom time range, it will be possible to query, visualize and navigate through data stored, by applying all the desired filters to data and then visualizing them clicking on SUBMIT button:
+<img width="1893" height="795" alt="Screenshot 2026-02-09 alle 12 43 59" src="https://github.com/user-attachments/assets/7349cc28-f236-4bb2-bfd7-9f53a96efa74" />
 
 ### Visualizing analytics with Grafana:
+In Grafana WebUI:
