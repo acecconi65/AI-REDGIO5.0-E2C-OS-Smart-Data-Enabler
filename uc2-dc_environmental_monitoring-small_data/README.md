@@ -1,6 +1,6 @@
 # Use Case 2: Data center environmental monitoring (small data)
 
-Monitoring of a ....
+Monitoring of a data center environmental measures expressede in SenML standard.
 
 ## Use Case reference:
 - Small dataset (100 records)
@@ -8,20 +8,26 @@ Monitoring of a ....
 - input data directly injected into a NiFi pipeline’s processor 
 
 ## Use Case scenario/operation:
-Four IIoT sensors – one for each phase R, S, T and Neutral - positioned inside a critical high-voltage substation wide electrical panel, a cooled environment for which it is fundamental to check data in order to highlight anomalies.<br>
-In highly critical industrial or infrastructure scenarios (hospitals, data centres, power stations), the use of a single sensor is often considered a single point of failure.<br>
-Installing four sensors on a single electrical panel allows for the implementation of redundancy and differentiated monitoring logic.<br>
-The objective is to detect whether one of the terminals is loosening (causing an increase in resistance and therefore heat) before an electric arc is triggered: if the temperature of phase R is significantly higher than the others, the system generates a predictive maintenance alarm.
+Defined by RFC 8428, SenML is a widely used industry standard because it allows multiple measurements to be grouped into a single package, optimising data weight/payload. It uses abbreviated key names to save bytes.
+Strength: International standardisation and interoperability between systems from different manufacturers.
+Typical use: Industrial gateways that send data to cloud platforms (Azure IoT, AWS IoT, MindSphere).
+
+To simulate data collection at successive time intervals in the SenML standard, the t (Time) field is used.
+In SenML, if a bt (Base Time) is present, the value of t in each record is added to the bt. This allows a historical series to be sent in a single JSON packet very efficiently, using small numbers (offsets) instead of repeating entire timestamps.
+In this use case, we simulate a reading every 60 seconds (offset of 60, 120, 180, etc.) for a control unit that monitors temperature and humidity.
 
 ## IIoT input data shape:
 ```
-
+[   {"bn": "urn:dev:mac:001122334455:", "bt": 1734643800, "bu": "Cel"},   {"n": "temp", "v": 23.5},   {"n": "hum", "v": 45, "u": "%EL"} ]
 ```
 
 ## IIoT input data description and reference values/range used in the demo:
-- **operation**: representing the process operation, always equal to "EP-G02-monitoring"
-
-
+- **bn (Base Name)**: device identifier (often a URN or a MAC address).
+- **bt (Base Time)**: reference timestamp (Unix epoch).
+- **bu (Base Unit)**: The default unit of measurement.
+- **n (Name)**: The name of the specific measure.
+- **v (Value)**: The value recorded
+- 
 ***
 
 ## Demo configuration:
@@ -32,7 +38,7 @@ In NiFi WebUI:
 <img width="478" height="126" alt="NiFI-ProcessGroup" src="https://github.com/user-attachments/assets/eb5c908b-a3d1-4901-8ae4-a79b80b49436" /><br>
 - click on the right side icon in the Field name:<br> 
 <img width="467" height="266" alt="NiFi-Loading" src="https://github.com/user-attachments/assets/973528b6-0a4d-4343-a37f-e62b5d724485" /><br>
-- upload file **air5-eda-uc1-pipeline.json** the pipeline will be placed in the canvas:<br>
+- upload file **air5-eda-uc2-pipeline.json** the pipeline will be placed in the canvas:<br>
 <img width="346" height="162" alt="NiFi-UC1" src="https://github.com/user-attachments/assets/03aaa9e4-888a-45a2-93d9-91b28ec0c886" /><br>
 - double click on the Process Group, the overall detailed pipeline will be shown, with the evidence of all the steps, ready to be activated:<br>
 <img width="1583" height="628" alt="NiFi-UC1-pipeline" src="https://github.com/user-attachments/assets/d15ca0de-8e4f-40b4-9ad2-25cf10c37846" />
@@ -49,7 +55,7 @@ In InfluxDB WebUI:
   
 ### Importing the Grafana dashboard:
 In Grafana WebUI:
-- import file **air5-eda-uc2-dashb-.......................json** using the import feature under New menu on the upper right:<br>
+- import file **air5-eda-uc2-dashb-1770387918405.json** using the import feature under New menu on the upper right:<br>
 <img width="1913" height="235" alt="Grafana-Import" src="https://github.com/user-attachments/assets/982e31d1-b2c8-4d53-aed3-ad263f49ca8e" />
 
 It is important to highlight that the import process includes both the creation of the dashboard analytics templates and the configuration of the connection to InfluxDB data, as it can be quite under:
@@ -63,7 +69,10 @@ as anticipated in "Use Case reference" section above, and as you can check going
 This step leads to two flows: the first one (2a) intends to store original data (for backup or further analysis reasons) into a MinIO storage area, the second one (2b to 8) represents the core application path (from data to analysis)<br><br>
 In order to be easily stored into InfluxDB, JSON data are transformed into Line Protocol format - the most suitable data format expected by InfluxDB. As an example, the JSON file in the "IIoT input data shape" section has this Line Protocol representation:<br>
 ```
-environment,deviceId=sensor-R,status=operational temperature=12.4,humidity=6.2,pressure=18.5,battery=3.31 1762772162000000000
+environment,sensor=urndevmac001523ac8211 temp=21.8 1734645120000000000
+environment,sensor=urndevmac001523ac8211 hum=42.5 1734645120000000000
+environment,sensor=urndevmac001523ac8211 temp=21.9 1734645180000000000
+environment,sensor=urndevmac001523ac8211 hum=42.6 1734645180000000000
 ```
 where the last value represents the epoch (nanoseconds) conversion of timestamp format.<br>
 Steps from 2a to 5 implement the transformation "record per record".<br>
@@ -97,30 +106,49 @@ In InfluxDB WebUI:
 <img width="1893" height="795" alt="Screenshot 2026-02-09 alle 12 43 59" src="https://github.com/user-attachments/assets/7349cc28-f236-4bb2-bfd7-9f53a96efa74" />
 
 ### Visualizing analytics with Grafana:
-In Grafana WebUI, the dashboard previously imported will provide the following four analytics, all related to the time range 2025-11-10 00:00:00 - 2025-11-10 23:59:00:<br>
+In Grafana WebUI, the dashboard previously imported will provide the following four analytics, all related to the time range 2024-12-19 22:00:00 - 2024-12-19 23:59:59:<br>
 <img width="1610" height="955" alt="Grafana dashb 1" src="https://github.com/user-attachments/assets/17d625e8-c2cf-400a-8843-90a8281193ff" />
 
 Let's examine each analytic in detail.
 
 **1. Overall measures in time range (time series):** this analytic visualizes all the measures included in the given time range.
-<img width="1908" height="943" alt="Grafana dashb 2" src="https://github.com/user-attachments/assets/b2cb1ace-daa9-4395-8363-4b8e21f8b841" />
+
 InfluxDB query underlying the analytic:
 ```
-
+from(bucket: "air5-eda-uc2-data")
+|> range(start: v.timeRangeStart, stop: v.timeRangeStop)
 ```
-**2. Focus on measures: temperature (time series):** this analytic visualizes the temperature trend (for a specific sensor) in the given time range, with evidence of outliers.
+**2. Temperature last value (stat):** this analytic visualizes the last value of temperature in the given time range.
+
 InfluxDB query underlying the analytic:
 ```
-
+from(bucket: "air5-eda-uc2-data")
+|> range(start: v.timeRangeStart, stop: v.timeRangeStop)
+|> filter(fn: (r) => r["_field"] == "temp")
+|> last()  
 ```
-**3. Focus on measures: pressure (time series):** this analytic visualizes the temperature trend (for a specific sensor) in the given time range, with evidence of outliers.
+**3. Hunidity last value (stat):** this analytic visualizes the last value of humidity in the given time range.
+
 InfluxDB query underlying the analytic:
 ```
-
-
+from(bucket: "air5-eda-uc2-data")
+|> range(start: v.timeRangeStart, stop: v.timeRangeStop)
+|> filter(fn: (r) => r["_field"] == "hum")
+|> last()
 ```
-**4. Measures per operative status in time range (pie chart):** this analytic monitors status changes in the given time range, with evidence of which sensor is reporting statuses other than normal (‘operational’) and how often.
+**4. Intensity heatmap (values distribution):** this analytic shows a grid where the most intense colour indicates that the sensor detected that specific value most frequently during that time period.
+<img width="788" height="361" alt="Grafana dashb 4" src="https://github.com/user-attachments/assets/354bb417-4986-4ff9-a130-8a1678373884" />
+Instead of showing just a line, this panel divides time into buckets and colours the areas based on the frequency of the values.
+Grafana configuration:
+- Panel: Select the ‘Heatmap’ type.
+- Data format: ‘Time series’.
+- Colour scheme: Select ‘Oranges’ or “Plasma” to highlight the ‘hot spots’.
+
 InfluxDB query underlying the analytic:
 ```
-
+from(bucket: "air5-eda-uc2-data")
+  |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
+  |> filter(fn: (r) => r["n"] == "temp")
+  // Let's aggregate in small intervals to create density
+  |> aggregateWindow(every: 1m, fn: mean, createEmpty: false)
 ```
