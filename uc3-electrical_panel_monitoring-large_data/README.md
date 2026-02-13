@@ -88,7 +88,7 @@ In InfluxDB WebUI:
   
 ### Importing the Grafana dashboard:
 In Grafana WebUI:
-- import file **air5-eda-uc1-dashb-1770387931287.json** using the import feature under New menu on the upper right:<br>
+- import file **air5-eda-uc3-dashb-1770387931287.json** using the import feature under New menu on the upper right:<br>
 <img width="1913" height="235" alt="Grafana-Import" src="https://github.com/user-attachments/assets/982e31d1-b2c8-4d53-aed3-ad263f49ca8e" />
 
 It is important to highlight that the import process includes both the creation of the dashboard analytics templates and the configuration of the connection to InfluxDB data, as it can be quite under:
