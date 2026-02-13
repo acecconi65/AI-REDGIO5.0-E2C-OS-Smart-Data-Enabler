@@ -139,7 +139,7 @@ InfluxDB query underlying the analytic:
 from(bucket: "air5-eda-uc4-data")
 |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
 ```
-**2. Multi-Axis Current vs. Vibration (Time Series):** this analytic visualizes the relation between current and vibration in the given time range.
+**2. Multi-Axis Current vs. Vibration (Time Series):** this analytic visualizes the relation between multi-axis current and vibration in the given time range.
 Since you have two axes working at once, it is critical to see if a spike in current leads to a spike in vibration.
 Visualization: Combined Time Series graph.
 What to look for: Axis 2 (y-axis: the shoulder) shows much higher current (6A - 8A) than Axis 1 (1A - 2A). Use two Y-axes: one for current_amp (Left) and one for vibration_mm_s (Right).
@@ -156,26 +156,34 @@ from(bucket: "air5-eda-uc4-data")
 |> yield(name: "electrical_mechanical_correlation")
 ```
 This query retrieves both metrics for all axes. Grafana will automatically draw separate lines for each axis_id because of the group function inherent in InfluxDB.<br>
-**3. Focus on measures: humidity (time series):** this analytic visualizes the humidity trend for a specific sensor (sensor-R) in the given time range, with evidence of outliers.
-InfluxDB query underlying the analytic:
-```
-from(bucket: "air5-eda-uc3-data")
-|> range(start: v.timeRangeStart, stop: v.timeRangeStop)
-// Specific filter for sensor R
-|> filter(fn: (r) => r["deviceId"] == "sensor-R")
-|> filter(fn: (r) => r["_field"] == "humidity")
-|> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)
-|> yield(name: "humidity_phase_R")
-```
-**4. Measures per operative status in time range (pie chart):** this analytic monitors status changes in the given time range, with evidence of which sensor is reporting statuses other than normal (‘operational’) and how often.
-In the following view, it is highlighted the presence of 90 Warning events out of a total of 4000 events:
-<img width="1617" height="829" alt="Grafana-Uc4-dashb1" src="https://github.com/user-attachments/assets/ecd75519-b112-49d3-9e6a-a4022b4190d0" />
+**3. Joint Temperature Heatmap (Heatmap / Bar Gauge):** this analytic visualizes the temperature trend retated to x-axis and y-axis in the given time range.<br>
+Thermal buildup is the primary cause of motor failure. Since Axis 2 is under more stress, its temperature will rise faster.<br>
+In this analytic, data is grouped by axis_id and it is used a color gradient from Blue (30°C) to Red (60°C).<br>
+In this data, y-axis already at 42.3°C while x-axis is at 38.5°C.: a heatmap allows you to see at a glance if the "shoulder" (y-axis) is reaching a critical threshold compared to the base.
+<br>
+<img width="1465" height="727" alt="Grafana-UC4-3" src="https://github.com/user-attachments/assets/b35173ae-7e36-4ea9-913f-9903de6f245b" />
 
 InfluxDB query underlying the analytic:
 ```
-from(bucket: "air5-eda-uc3-data")
+from(bucket: "air5-eda-uc4-data")
 |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
-|> filter(fn: (r) => r["_field"] == "temperature") 
-|> group(columns: ["status"])
-|> count()
-|> yield(name: "status_count")
+|> filter(fn: (r) => r["_measurement"] == “robot_metrics")
+|> filter(fn: (r) => r["_field"] == "temp_cel") 
+// Calculate the average temperature for the selected window 
+|> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false) 
+|> yield(name: "thermal_load")
+```
+**4. Axis Position "Trailing" (Scatter Plot or XY Chart):** This visualization helps understand the "duty cycle" or the physical path the robot is taking.
+Looking at data, x-axis is rotating steadily (from 45 to 57 degrees), while y-axis is slightly dipping (from 10.0 to 8.6 degrees). Plotting these allows you to visualize the "envelope" of the movement. If the lines become jagged, the robot is losing precision.<br>
+<img width="1376" height="737" alt="Grafana-UC4-4" src="https://github.com/user-attachments/assets/4f33a002-e2ae-4fd2-acf6-29aa1237cd2c" />
+
+InfluxDB query underlying the analytic:
+```
+from(bucket: "air5-eda-uc4-data")
+|> range(start: v.timeRangeStart, stop: v.timeRangeStop)
+|> filter(fn: (r) => r["_measurement"] == "robot_metrics")
+|> filter(fn: (r) => r["_field"] == "pos_deg")
+// We pivot so that each axis becomes a column, making it easier for XY Chart
+|> pivot(rowKey:["_time"], columnKey: ["axis_id"], valueColumn: "_value")
+|> yield(name: "motion_path")
+```
