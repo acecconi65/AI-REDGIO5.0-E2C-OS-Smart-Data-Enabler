@@ -42,7 +42,7 @@ Let's replicate exactly the same Use Case 1 scenario but playing with a large in
   - “critical”: an imminent danger threshold has been exceeded
   - “out of range”: the sensor is detecting a value that exceeds its physical measurement capabilities (often indicating a transducer failure)
 <br><br>
-The input data file has been generated in this way:
+The input data file "IIoT-shape-typeA-UC3.json" has been generated in this way:
 - 1000 record for each of the four sensors
 - "timestamp" starts from 2025-11-10 00:00:00 and increments by 1 sec for every new record
 - "temperature" is a random value between 9.5 and 14.0 and must be in the range 10.0 - 13.0 for the 95% of records generated
@@ -73,9 +73,9 @@ In NiFi WebUI:
 Step/processor's configuration and properties are reachable right-clicking on the processor itself and selecting "Configure".
 
 ### Preparing the input file for the NiFi pipeline:
-Thanks to the following directive in the docker-compose.yml file:
+Thanks to the following directive in the docker-compose.yml file:<br>
 <img width="307" height="32" alt="NiFi-UC3-file" src="https://github.com/user-attachments/assets/789d4710-e81a-49c6-b834-edba7cd16c60" /><br>
-and having created "source-data" directory for input data (see Deployment Steps - Step 1), let's copy IIoT-shape-typeA-UC3.json file in that directory.<br>
+and having created "source-data" directory for input data (see Deployment Steps - Step 1), let's copy "IIoT-shape-typeA-UC3.json" file in that directory.<br>
 In genaral, you can copy the data related to your specific use case: just make sure it complies to "IIoT input data shape" format and it is included in a file with ".json" suffix.
 
 ### Creating the MinIO bucket for data:
@@ -133,47 +133,55 @@ In MinIO WebUI:
 
 ### Storing process data in InfluxDB database:
 In InfluxDB WebUI:
-- going to Data Explorer environment and selecting from 2025-11-10 00:00:00 to 2025-11-10 23:59:00 as the custom time range, it will be possible to query, visualize and navigate through data stored, by applying all the desired filters to data and then visualizing them clicking on SUBMIT button:
-<img width="1893" height="795" alt="Screenshot 2026-02-09 alle 12 43 59" src="https://github.com/user-attachments/assets/7349cc28-f236-4bb2-bfd7-9f53a96efa74" />
+- going to Data Explorer environment and selecting from 2025-11-10 01:00:00 to 2025-11-10 01:30:00 as the custom time range, it will be possible to query, visualize and navigate through data stored, by applying all the desired filters to data and then visualizing them clicking on SUBMIT button:
+<img width="1826" height="831" alt="Influx-UC3" src="https://github.com/user-attachments/assets/e6882315-50ef-4f42-b4df-5750cef22d51" />
 
 ### Visualizing analytics with Grafana:
-In Grafana WebUI, the dashboard previously imported will provide the following four analytics, all related to the time range 2025-11-10 00:00:00 - 2025-11-10 23:59:00:<br>
-<img width="1610" height="955" alt="Grafana dashb 1" src="https://github.com/user-attachments/assets/17d625e8-c2cf-400a-8843-90a8281193ff" />
+In Grafana WebUI, the dashboard previously imported will provide the following four analytics, all related to the time range 2025-11-10 01:00:00 - 2025-11-10 01:30:00:<br>
+<img width="1605" height="724" alt="Grafana-UC4" src="https://github.com/user-attachments/assets/3cf804b7-dff4-41e5-b6d1-94fdf803f1a3" />
 
 Let's examine each analytic in detail.
 
 **1. Overall measures in time range (time series):** this analytic visualizes all the measures included in the given time range.
-<img width="1908" height="943" alt="Grafana dashb 2" src="https://github.com/user-attachments/assets/b2cb1ace-daa9-4395-8363-4b8e21f8b841" />
+In the following view, it is highlighted an Out-of-range status for sensor-N caused by a battery value of 3.16 (lower than the threshold of 3.3) occurred at 01:00:34:
+<img width="1812" height="827" alt="Grafana-UC3-dashb" src="https://github.com/user-attachments/assets/18b769c3-c763-4191-938c-0fed543c7adb" />
+
 InfluxDB query underlying the analytic:
 ```
-from(bucket: "air5-eda-uc1-data")
+from(bucket: "air5-eda-uc3-data")
 |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
 ```
-**2. Focus on measures: temperature (time series):** this analytic visualizes the temperature trend (for a specific sensor) in the given time range, with evidence of outliers.
+**2. Focus on measures: temperature for sensor-R (time series):** this analytic visualizes the temperature trend for a specific sensor (sensor-R) in the given time range, with evidence of outliers.
+In the following view, it is reported the trend on a shorter time range (5 minutes: from 01:00 to 01:00) and it is highlighted a Warning value of 13.7 for temperature occurred at 01:00:13:
+<img width="1606" height="829" alt="Grafana-UC3-dashb2" src="https://github.com/user-attachments/assets/f9e13ddb-cdc0-48fc-baed-018389ceae02" />
+
 InfluxDB query underlying the analytic:
 ```
-from(bucket: "air5-eda-uc1-data")
+from(bucket: "air5-eda-uc3-data")
 |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
 |> filter(fn: (r) => r["deviceId"] == "sensor-R")
 |> filter(fn: (r) => r["_field"] == "pressure")
 |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)
 |> yield(name: "pression_phase_R")
 ```
-**3. Focus on measures: pressure (time series):** this analytic visualizes the temperature trend (for a specific sensor) in the given time range, with evidence of outliers.
+**3. Focus on measures: humidity (time series):** this analytic visualizes the humidity trend for a specific sensor (sensor-R) in the given time range, with evidence of outliers.
 InfluxDB query underlying the analytic:
 ```
-from(bucket: "air5-eda-uc1-data")
+from(bucket: "air5-eda-uc3-data")
 |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
 // Specific filter for sensor R
 |> filter(fn: (r) => r["deviceId"] == "sensor-R")
-|> filter(fn: (r) => r["_field"] == "temperature")
+|> filter(fn: (r) => r["_field"] == "humidity")
 |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)
-|> yield(name: "temperature_phase_R")
+|> yield(name: "humidity_phase_R")
 ```
 **4. Measures per operative status in time range (pie chart):** this analytic monitors status changes in the given time range, with evidence of which sensor is reporting statuses other than normal (‘operational’) and how often.
+In the following view, it is highlighted the presence of 90 Warning events out of a total of 4000 events:
+<img width="1617" height="829" alt="Grafana-Uc4-dashb1" src="https://github.com/user-attachments/assets/ecd75519-b112-49d3-9e6a-a4022b4190d0" />
+
 InfluxDB query underlying the analytic:
 ```
-from(bucket: "air5-eda-uc1-data")
+from(bucket: "air5-eda-uc3-data")
 |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
 |> filter(fn: (r) => r["_field"] == "temperature") 
 |> group(columns: ["status"])
