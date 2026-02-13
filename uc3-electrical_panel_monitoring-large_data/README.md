@@ -129,7 +129,7 @@ In NiFi WebUI:
 ### Sending IIoT data to MinIO:
 In MinIO WebUI:
 - the input dataset has been sent to the bucket previously created:
-<img width="1620" height="402" alt="MinIO-file" src="https://github.com/user-attachments/assets/b7107ce9-13a9-45b3-bd0f-9756845ecbce" />
+<img width="1507" height="347" alt="MinIO-UC3" src="https://github.com/user-attachments/assets/bdc6f6d4-5804-472a-8b5e-bab5cbdcb641" />
 
 ### Storing process data in InfluxDB database:
 In InfluxDB WebUI:
