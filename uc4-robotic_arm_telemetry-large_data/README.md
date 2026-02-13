@@ -84,22 +84,22 @@ It is important to highlight that the import process includes both the creation 
 
 ## NiFi pipeline description:
 Going back to NiFi WebUI, let's give a detail to all the pipeline steps:
-- step 1:  submitting the source JSON dataset to the application
+- step 1:  submitting the source CSV dataset to the application
 as anticipated in "Preparing the input file for the NiFi pipeline" section above, and as you can check going to the Properties tab of processor's configuration, the source dataset is read from file:<br><br>
-<img width="1014" height="604" alt="NiFi-UC3-Step1" src="https://github.com/user-attachments/assets/dc3e61e5-feae-4570-b5dd-e287b190f86d" />
+<img width="1016" height="599" alt="NiFi-UC4-file" src="https://github.com/user-attachments/assets/3a5a5c7f-71e9-4b58-84c2-d417fb8fda1f" />
 
 This step leads to two flows: the first one (2a) intends to store original data (for backup or further analysis reasons) into a MinIO storage area, the second one (2b to 8) represents the core application path (from data to analysis)<br><br>
-In order to be easily stored into InfluxDB, JSON data are transformed into Line Protocol format - the most suitable data format expected by InfluxDB. As an example, the JSON file in the "IIoT input data shape" section has this Line Protocol representation:<br>
+In order to be easily stored into InfluxDB, CSV data are transformed into Line Protocol format - the most suitable data format expected by InfluxDB. As an example, the CSV file in the "IIoT input data shape" section has this Line Protocol representation:<br>
 ```
-environment,deviceId=sensor-R,status=operational temperature=12.4,humidity=6.2,pressure=18.5,battery=3.31 1762772162000000000
+obot_metrics,robot_id=ROB-01,axis_id=2 pos_deg=-5.72,current_amp=6.66,temp_cel=65,vibration_mm_s=0.132 1766511099000000000
 ```
 where the last value represents the epoch (nanoseconds) conversion of timestamp format.<br>
 Steps from 2a to 5 implement the transformation "record per record".<br>
 - step 2a: storing data into the MinIO bucket
 - step 2b: splitting JSON data per single record
-- step 3:  extracting single fields from records
-- step 4:  normalizing timestamp field
-- step 5:  converting JSON data into Line Protocol format (InfluxDB friendly)
+- step 3:  extracting each records
+- step 4:  extracting metadata and converting timestamp into nanoseconds
+- step 5:  converting text data into Line Protocol format (InfluxDB friendly)
 - step 6:  merging data to submit to InfluxDB
 - step 7:  writing data into InfluxDB
 - step 8:  logging InfluxDB transactions
@@ -110,7 +110,7 @@ Steps from 2a to 5 implement the transformation "record per record".<br>
 
 ### NiFi pipeline activation:
 In NiFi WebUI:
-1. Activate (right-click on the processor, then select "Start": the red square icon will turn into a green arrow icon) all the processors except step 1 "Submitting IoT dataset use case 1"
+1. Activate (right-click on the processor, then select "Start": the red square icon will turn into a green arrow icon) all the processors except step 1 "Submitting IoT dataset use case 4"
 2. Activate processor step 1 for 2 seconds then deactivate it (just to trigger data start flowing along the pipeline)
 3. Check the value of "Tasks/Time" in the processors step 7 and 8: when they are no longer equal to zero, it means that the pipeline is complete
 
