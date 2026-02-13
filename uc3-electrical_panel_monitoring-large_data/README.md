@@ -122,7 +122,7 @@ Steps from 2a to 5 implement the transformation "record per record".<br>
 
 ### NiFi pipeline activation:
 In NiFi WebUI:
-1. Activate (right-click on the processor, then select "Start": the red square icon will turn into a green arrow icon) all the processors except step 1 "Submitting IoT dataset use case 1"
+1. Activate (right-click on the processor, then select "Start": the red square icon will turn into a green arrow icon) all the processors except step 1 "Submitting IoT dataset use case 3"
 2. Activate processor step 1 for 2 seconds then deactivate it (just to trigger data start flowing along the pipeline)
 3. Check the value of "Tasks/Time" in the processors step 7 and 8: when they are no longer equal to zero, it means that the pipeline is complete
 
