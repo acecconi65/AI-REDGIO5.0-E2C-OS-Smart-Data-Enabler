@@ -41,7 +41,7 @@ Measures refer to the time range 23-12-2025 17:50:00 - 23-12-2025 18:32:00.<br>
 In this scenario:
 - x-axis (Base) performs wide forward and backward rotations.
 - y-axis 2 (Shoulder) undergoes greater stress (high current and vibrations) when extending or lifting a load.
-The temperature rises gradually during work and drops during breaks.
+The temperature rises gradually during arm motion and drops during breaks.
 
 ***
 
@@ -53,30 +53,30 @@ In NiFi WebUI:
 <img width="478" height="126" alt="NiFI-ProcessGroup" src="https://github.com/user-attachments/assets/eb5c908b-a3d1-4901-8ae4-a79b80b49436" /><br>
 - click on the right side icon in the Field name:<br> 
 <img width="467" height="266" alt="NiFi-Loading" src="https://github.com/user-attachments/assets/973528b6-0a4d-4343-a37f-e62b5d724485" /><br>
-- upload file **air5-eda-uc1-pipeline.json** the pipeline will be placed in the canvas:<br>
+- upload file **air5-eda-uc4-pipeline.json** the pipeline will be placed in the canvas:<br>
 <img width="346" height="162" alt="NiFi-UC1" src="https://github.com/user-attachments/assets/03aaa9e4-888a-45a2-93d9-91b28ec0c886" /><br>
 - double click on the Process Group, the overall detailed pipeline will be shown, with the evidence of all the steps, ready to be activated:<br>
-<img width="1743" height="691" alt="NiFI-UC3-pipeline" src="https://github.com/user-attachments/assets/c03886ac-4a93-4a45-a015-d50136d4d157" />
+<img width="1664" height="680" alt="NiFi-UC4-pipeline" src="https://github.com/user-attachments/assets/6bf6fddf-b45d-4dc0-80d2-bb34a5252c3e" />
 <br>
 Step/processor's configuration and properties are reachable right-clicking on the processor itself and selecting "Configure".
 
 ### Preparing the input file for the NiFi pipeline:
 Thanks to the following directive in the docker-compose.yml file:<br>
 <img width="307" height="32" alt="NiFi-UC3-file" src="https://github.com/user-attachments/assets/789d4710-e81a-49c6-b834-edba7cd16c60" /><br>
-and having created "source-data" directory for input data (see Deployment Steps - Step 1), let's copy "IIoT-shape-typeA-UC3.json" file in that directory.<br>
-In genaral, you can copy the data related to your specific use case: just make sure it complies to "IIoT input data shape" format and it is included in a file with ".json" suffix.
+and having created "source-data" directory for input data (see Deployment Steps - Step 1), let's copy "IIoT-shape-typeC-UC4.csv" file in that directory.<br>
+In genaral, you can copy the data related to your specific use case: just make sure it complies to "IIoT input data shape" format and it is included in a file with ".csv" suffix.
 
 ### Creating the MinIO bucket for data:
 In MinIO WebUI:
-- create a bucket named "air5-eda-uc3-bucket"
+- create a bucket named "air5-eda-uc4-bucket"
   
 ### Creating the InfluxDB bucket for data:
 In InfluxDB WebUI:
-- create a bucket named "air5-eda-uc3-data"
+- create a bucket named "air5-eda-uc4-data"
   
 ### Importing the Grafana dashboard:
 In Grafana WebUI:
-- import file **air5-eda-uc1-dashb-1770387931287.json** using the import feature under New menu on the upper right:<br>
+- import file **air5-eda-uc4-dashb-1770387944741.json** using the import feature under New menu on the upper right:<br>
 <img width="1913" height="235" alt="Grafana-Import" src="https://github.com/user-attachments/assets/982e31d1-b2c8-4d53-aed3-ad263f49ca8e" />
 
 It is important to highlight that the import process includes both the creation of the dashboard analytics templates and the configuration of the connection to InfluxDB data, as it can be quite under:
