@@ -66,10 +66,11 @@ It is important to highlight that the import process includes both the creation 
 <img width="1664" height="550" alt="Grafana - Influx" src="https://github.com/user-attachments/assets/d303eb94-db6d-44e4-8ac6-5f90b7618dc8" />
 
 ## NiFi pipeline description:
-Going back to NiFi WebUI, let's give a detail to all the pipeline steps:
+Going back to NiFi WebUI, let's give a detail to all the pipeline steps:<br>
 - step 1:  submitting the source JSON dataset to the application
 as anticipated in "Use Case reference" section above, and as you can check going to the Properties tab of processor's configuration and right-clicking on "Custom text" field, the source dataset is directly inserted internally to the pipeline:<br><br>
-<img width="1267" height="596" alt="NiFi-UC2-CustomText" src="https://github.com/user-attachments/assets/ad3c0fbf-0a96-43d7-8476-60fdbd30c11e" />
+<img width="1267" height="596" alt="NiFi-UC2-CustomText" src="https://github.com/user-attachments/assets/ad3c0fbf-0a96-43d7-8476-60fdbd30c11e" /><br>
+
 This step leads to two flows: the first one (2a) intends to store original data (for backup or further analysis reasons) into a MinIO storage area, the second one (2b to 4) represents the core application path (from data to analysis)<br><br>
 In order to be easily stored into InfluxDB, JSON data are transformed into Line Protocol format - the most suitable data format expected by InfluxDB. As an example, the JSON file in the "IIoT input data shape" section has this Line Protocol representation:<br>
 ```
@@ -79,7 +80,7 @@ environment,sensor=urndevmac001523ac8211 temp=21.9 1734645180000000000
 environment,sensor=urndevmac001523ac8211 hum=42.6 1734645180000000000
 ```
 where the last value represents the epoch (nanoseconds) conversion of timestamp format.<br>
-Steps from 2a to 4 implement the transformation "record per record".<br>
+
 - step 2a: storing data into the MinIO bucket
 - step 2b: transforming input data into Line Protocol format (InfluxDB friendly) by using the following groovy script:
 ```
@@ -146,12 +147,12 @@ In MinIO WebUI:
 
 ### Storing process data in InfluxDB database:
 In InfluxDB WebUI:
-- going to Data Explorer environment and selecting from 2025-11-10 00:00:00 to 2025-11-10 23:59:00 as the custom time range, it will be possible to query, visualize and navigate through data stored, by applying all the desired filters to data and then visualizing them clicking on SUBMIT button:
-<img width="1893" height="795" alt="Screenshot 2026-02-09 alle 12 43 59" src="https://github.com/user-attachments/assets/7349cc28-f236-4bb2-bfd7-9f53a96efa74" />
+- going to Data Explorer environment and selecting from 2024-12-19 22:00:00 to 2024-12-19 23:59:59 as the custom time range, it will be possible to query, visualize and navigate through data stored, by applying all the desired filters to data and then visualizing them clicking on SUBMIT button:
+<img width="1827" height="814" alt="Influx-UC2" src="https://github.com/user-attachments/assets/a0a1c8b7-adb8-4462-8206-f9b4b3628fd8" />
 
 ### Visualizing analytics with Grafana:
 In Grafana WebUI, the dashboard previously imported will provide the following four analytics, all related to the time range 2024-12-19 22:00:00 - 2024-12-19 23:59:59:<br>
-<img width="1610" height="955" alt="Grafana dashb 1" src="https://github.com/user-attachments/assets/17d625e8-c2cf-400a-8843-90a8281193ff" />
+<img width="788" height="361" alt="Grafana-UC2-dashb-gen" src="https://github.com/user-attachments/assets/3183c874-fb21-40e2-8300-892921aad5c0" />
 
 Let's examine each analytic in detail.
 
@@ -181,7 +182,7 @@ from(bucket: "air5-eda-uc2-data")
 |> last()
 ```
 **4. Intensity heatmap (values distribution):** this analytic shows a grid where the most intense colour indicates that the sensor detected that specific value most frequently during that time period.
-<img width="788" height="361" alt="Grafana dashb 4" src="https://github.com/user-attachments/assets/354bb417-4986-4ff9-a130-8a1678373884" />
+
 Instead of showing just a line, this panel divides time into buckets and colours the areas based on the frequency of the values.
 Grafana configuration:
 - Panel: Select the ‘Heatmap’ type.
