@@ -8,17 +8,21 @@ Monitoring of a data center environmental measures expressede in SenML standard.
 - input data directly injected into a NiFi pipeline’s processor 
 
 ## Use Case scenario/operation:
-Defined by RFC 8428, SenML is a widely used industry standard because it allows multiple measurements to be grouped into a single package, optimising data weight/payload. It uses abbreviated key names to save bytes.
-Strength: International standardisation and interoperability between systems from different manufacturers.
-Typical use: Industrial gateways that send data to cloud platforms (Azure IoT, AWS IoT, MindSphere).
+Defined by RFC 8428, SenML is a widely used industry standard because it allows multiple measurements to be grouped into a single package, optimising data weight/payload. It uses abbreviated key names to save bytes.<br>
+Strength: International standardisation and interoperability between systems from different manufacturers.<br>
+Typical use: Industrial gateways that send data to cloud platforms (Azure IoT, AWS IoT, MindSphere).<br>
 
-To simulate data collection at successive time intervals in the SenML standard, the t (Time) field is used.
-In SenML, if a bt (Base Time) is present, the value of t in each record is added to the bt. This allows a historical series to be sent in a single JSON packet very efficiently, using small numbers (offsets) instead of repeating entire timestamps.
+To simulate data collection at successive time intervals in the SenML standard, the t (Time) field is used.<br>
+In SenML, if a bt (Base Time) is present, the value of t in each record is added to the bt. This allows a historical series to be sent in a single JSON packet very efficiently, using small numbers (offsets) instead of repeating entire timestamps.<br>
 In this use case, we simulate a reading every 60 seconds (offset of 60, 120, 180, etc.) for a control unit that monitors temperature and humidity.
 
 ## IIoT input data shape:
 ```
-[   {"bn": "urn:dev:mac:001122334455:", "bt": 1734643800, "bu": "Cel"},   {"n": "temp", "v": 23.5},   {"n": "hum", "v": 45, "u": "%EL"} ]
+[
+  {"bn": "urn:dev:mac:001122334455:", "bt": 1734643800, "bu": "Cel"},
+  {"n": "temp", "v": 23.5},
+  {"n": "hum", "v": 45, "u": "%EL"}
+]
 ```
 
 ## IIoT input data description and reference values/range used in the demo:
@@ -27,7 +31,7 @@ In this use case, we simulate a reading every 60 seconds (offset of 60, 120, 180
 - **bu (Base Unit)**: The default unit of measurement.
 - **n (Name)**: The name of the specific measure.
 - **v (Value)**: The value recorded
-- 
+  
 ***
 
 ## Demo configuration:
@@ -41,7 +45,7 @@ In NiFi WebUI:
 - upload file **air5-eda-uc2-pipeline.json** the pipeline will be placed in the canvas:<br>
 <img width="346" height="162" alt="NiFi-UC1" src="https://github.com/user-attachments/assets/03aaa9e4-888a-45a2-93d9-91b28ec0c886" /><br>
 - double click on the Process Group, the overall detailed pipeline will be shown, with the evidence of all the steps, ready to be activated:<br>
-<img width="1583" height="628" alt="NiFi-UC1-pipeline" src="https://github.com/user-attachments/assets/d15ca0de-8e4f-40b4-9ad2-25cf10c37846" />
+<img width="857" height="702" alt="NiFi-UC2-pipeline" src="https://github.com/user-attachments/assets/5fa73c9b-d95b-4329-be85-5735a1bab78e" />
 <br>
 Step/processor's configuration and properties are reachable right-clicking on the processor itself and selecting "Configure".
 
@@ -65,8 +69,8 @@ It is important to highlight that the import process includes both the creation 
 Going back to NiFi WebUI, let's give a detail to all the pipeline steps:
 - step 1:  submitting the source JSON dataset to the application
 as anticipated in "Use Case reference" section above, and as you can check going to the Properties tab of processor's configuration and right-clicking on "Custom text" field, the source dataset is directly inserted internally to the pipeline:<br><br>
-<img width="1270" height="612" alt="NiFi-CustomText" src="https://github.com/user-attachments/assets/753c2d64-c9f2-4081-b66a-6f8b6335d88c" /><br><br>
-This step leads to two flows: the first one (2a) intends to store original data (for backup or further analysis reasons) into a MinIO storage area, the second one (2b to 8) represents the core application path (from data to analysis)<br><br>
+<img width="1267" height="596" alt="NiFi-UC2-CustomText" src="https://github.com/user-attachments/assets/ad3c0fbf-0a96-43d7-8476-60fdbd30c11e" />
+This step leads to two flows: the first one (2a) intends to store original data (for backup or further analysis reasons) into a MinIO storage area, the second one (2b to 4) represents the core application path (from data to analysis)<br><br>
 In order to be easily stored into InfluxDB, JSON data are transformed into Line Protocol format - the most suitable data format expected by InfluxDB. As an example, the JSON file in the "IIoT input data shape" section has this Line Protocol representation:<br>
 ```
 environment,sensor=urndevmac001523ac8211 temp=21.8 1734645120000000000
@@ -75,15 +79,55 @@ environment,sensor=urndevmac001523ac8211 temp=21.9 1734645180000000000
 environment,sensor=urndevmac001523ac8211 hum=42.6 1734645180000000000
 ```
 where the last value represents the epoch (nanoseconds) conversion of timestamp format.<br>
-Steps from 2a to 5 implement the transformation "record per record".<br>
+Steps from 2a to 4 implement the transformation "record per record".<br>
 - step 2a: storing data into the MinIO bucket
-- step 2b: splitting JSON data per single record
-- step 3:  extracting single fields from records
-- step 4:  normalizing timestamp field
-- step 5:  converting JSON data into Line Protocol format (InfluxDB friendly)
-- step 6:  merging data to submit to InfluxDB
-- step 7:  writing data into InfluxDB
-- step 8:  logging InfluxDB transactions
+- step 2b: transforming input data into Line Protocol format (InfluxDB friendly) by using the following groovy script:
+```
+import org.apache.commons.io.IOUtils
+import java.nio.charset.StandardCharsets
+import groovy.json.JsonSlurper
+
+def flowFile = session.get()
+if (!flowFile) return
+
+try {
+    flowFile = session.write(flowFile, { inputStream, outputStream ->
+        def json = new JsonSlurper().parse(inputStream)
+        
+        // 1. Extract metadata from the first element
+        def metadata = json[0]
+        def baseName = metadata.bn.replace(":", "") // Clean MAC address
+        def baseTime = metadata.bt as Long
+        
+        def lineProtocolBuffer = new StringBuilder()
+
+        // 2. Iterate on measures (bypassing metadata first element)
+        json.eachWithIndex { entry, index ->
+            if (index == 0) return // Bypass header
+            
+            def name = entry.n
+            def value = entry.v
+            def offset = (entry.t ?: 0) as Long // If t misses, use 0
+            def timestamp = (baseTime + offset)*1000000000
+            
+            // 3. Build InfluxDB row: measurement,tag field timestamp
+            // Format: environment,sensor=MAC value=23.5 1734645120
+            lineProtocolBuffer.append("environment,sensor=${baseName} ${name}=${value} ${timestamp}\n")
+        }
+        
+        outputStream.write(lineProtocolBuffer.toString().getBytes(StandardCharsets.UTF_8))
+    } as StreamCallback)
+
+    // Set Content-Type for InvokeHTTP
+    flowFile = session.putAttribute(flowFile, "mime.type", "text/plain")
+    session.transfer(flowFile, REL_SUCCESS)
+} catch (Exception e) {
+    log.error("Error in Groovy transformation", e)
+    session.transfer(flowFile, REL_FAILURE)
+}
+```
+- step 3:  writing data into InfluxDB
+- step 4:  logging InfluxDB transactions
 
 ***
 
