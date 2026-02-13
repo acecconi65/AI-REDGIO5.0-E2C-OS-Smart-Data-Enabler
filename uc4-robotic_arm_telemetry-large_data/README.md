@@ -41,7 +41,7 @@ Measures refer to the time range 23-12-2025 17:50:00 - 23-12-2025 18:32:00.<br>
 In this scenario:
 - x-axis (Base) performs wide forward and backward rotations.
 - y-axis 2 (Shoulder) undergoes greater stress (high current and vibrations) when extending or lifting a load.
-The temperature rises gradually during arm motion and drops during breaks.
+- the temperature rises gradually during arm motion and drops during breaks.
 
 ***
 
@@ -64,7 +64,7 @@ Step/processor's configuration and properties are reachable right-clicking on th
 Thanks to the following directive in the docker-compose.yml file:<br>
 <img width="307" height="32" alt="NiFi-UC3-file" src="https://github.com/user-attachments/assets/789d4710-e81a-49c6-b834-edba7cd16c60" /><br>
 and having created "source-data" directory for input data (see Deployment Steps - Step 1), let's copy "IIoT-shape-typeC-UC4.csv" file in that directory.<br>
-In genaral, you can copy the data related to your specific use case: just make sure it complies to "IIoT input data shape" format and it is included in a file with ".csv" suffix.
+In general, you can copy the data related to your specific use case: just make sure it complies to "IIoT input data shape" format and it is included in a file with ".csv" suffix. Just pay attention: do not include the header row in the CSV file to be ingested.
 
 ### Creating the MinIO bucket for data:
 In MinIO WebUI:
@@ -117,41 +117,45 @@ In NiFi WebUI:
 ### Sending IIoT data to MinIO:
 In MinIO WebUI:
 - the input dataset has been sent to the bucket previously created:
-<img width="1507" height="347" alt="MinIO-UC3" src="https://github.com/user-attachments/assets/bdc6f6d4-5804-472a-8b5e-bab5cbdcb641" />
+<img width="1647" height="368" alt="MinIO-UC4" src="https://github.com/user-attachments/assets/187bceb6-94a1-453a-89c2-50b3c03439a8" />
 
 ### Storing process data in InfluxDB database:
 In InfluxDB WebUI:
-- going to Data Explorer environment and selecting from 2025-11-10 01:00:00 to 2025-11-10 01:30:00 as the custom time range, it will be possible to query, visualize and navigate through data stored, by applying all the desired filters to data and then visualizing them clicking on SUBMIT button:
-<img width="1826" height="831" alt="Influx-UC3" src="https://github.com/user-attachments/assets/e6882315-50ef-4f42-b4df-5750cef22d51" />
+- going to Data Explorer environment and selecting from 2025-12-23 17:50:00 to 2025-12-23 18:32:00 as the custom time range, it will be possible to query, visualize and navigate through data stored, by applying all the desired filters to data and then visualizing them clicking on SUBMIT button:
+<img width="1841" height="746" alt="Influx-UC4" src="https://github.com/user-attachments/assets/87daca33-9966-457b-8edb-34c7d46bb841" />
 
 ### Visualizing analytics with Grafana:
-In Grafana WebUI, the dashboard previously imported will provide the following four analytics, all related to the time range 2025-11-10 01:00:00 - 2025-11-10 01:30:00:<br>
-<img width="1605" height="724" alt="Grafana-UC4" src="https://github.com/user-attachments/assets/3cf804b7-dff4-41e5-b6d1-94fdf803f1a3" />
+In Grafana WebUI, the dashboard previously imported will provide the following four analytics, all related to the time range 2025-12-23 17:50:00 - 2025-12-23 18:32:00:<br>
+<img width="1600" height="942" alt="Grafana-UC4" src="https://github.com/user-attachments/assets/3149b9da-8be0-4651-9241-699059ed82e0" />
 
 Let's examine each analytic in detail.
 
 **1. Overall measures in time range (time series):** this analytic visualizes all the measures included in the given time range.
-In the following view, it is highlighted an Out-of-range status for sensor-N caused by a battery value of 3.16 (lower than the threshold of 3.3) occurred at 01:00:34:
-<img width="1812" height="827" alt="Grafana-UC3-dashb" src="https://github.com/user-attachments/assets/18b769c3-c763-4191-938c-0fed543c7adb" />
+In the following view, it is highlighted the event occurred at 18:12:16 in which the robotic arm position has risen 90 degrees relative to the x-axis:
+<img width="1856" height="823" alt="Grafana-UC4-1" src="https://github.com/user-attachments/assets/67463fbc-e691-44ed-93dd-b03b96c571f6" />
 
 InfluxDB query underlying the analytic:
 ```
-from(bucket: "air5-eda-uc3-data")
+from(bucket: "air5-eda-uc4-data")
 |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
 ```
-**2. Focus on measures: temperature for sensor-R (time series):** this analytic visualizes the temperature trend for a specific sensor (sensor-R) in the given time range, with evidence of outliers.
-In the following view, it is reported the trend on a shorter time range (5 minutes: from 01:00 to 01:00) and it is highlighted a Warning value of 13.7 for temperature occurred at 01:00:13:
-<img width="1606" height="829" alt="Grafana-UC3-dashb2" src="https://github.com/user-attachments/assets/f9e13ddb-cdc0-48fc-baed-018389ceae02" />
+**2. Multi-Axis Current vs. Vibration (Time Series):** this analytic visualizes the relation between current and vibration in the given time range.
+Since you have two axes working at once, it is critical to see if a spike in current leads to a spike in vibration.
+Visualization: Combined Time Series graph.
+What to look for: Axis 2 (y-axis: the shoulder) shows much higher current (6A - 8A) than Axis 1 (1A - 2A). Use two Y-axes: one for current_amp (Left) and one for vibration_mm_s (Right).
+Insight: If Axis 2 vibration increases while the current remains steady, it indicates mechanical wear or a loose bolt. If both spike, it indicates the robot is struggling with a heavy load.<br>
+<img width="1622" height="823" alt="Grafana-UC4-2" src="https://github.com/user-attachments/assets/018142ec-cca8-4b43-b6aa-daaf87ca02c1" />
 
 InfluxDB query underlying the analytic:
 ```
-from(bucket: "air5-eda-uc3-data")
+from(bucket: "air5-eda-uc4-data")
 |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
-|> filter(fn: (r) => r["deviceId"] == "sensor-R")
-|> filter(fn: (r) => r["_field"] == "pressure")
-|> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false)
-|> yield(name: "pression_phase_R")
+|> filter(fn: (r) => r["_measurement"] == "robot_metrics")
+|> filter(fn: (r) => r["_field"] == "current_amp" or r["_field"] == "vibration_mm_s")
+// Keep axis_id to separate the lines in the legend
+|> yield(name: "electrical_mechanical_correlation")
 ```
+This query retrieves both metrics for all axes. Grafana will automatically draw separate lines for each axis_id because of the group function inherent in InfluxDB.<br>
 **3. Focus on measures: humidity (time series):** this analytic visualizes the humidity trend for a specific sensor (sensor-R) in the given time range, with evidence of outliers.
 InfluxDB query underlying the analytic:
 ```
