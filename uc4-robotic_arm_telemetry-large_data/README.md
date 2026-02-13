@@ -130,8 +130,8 @@ In Grafana WebUI, the dashboard previously imported will provide the following f
 
 Let's examine each analytic in detail.
 
-**1. Overall measures in time range (time series):** this analytic visualizes all the measures included in the given time range.
-In the following view, it is highlighted the event occurred at 18:12:16 in which the robotic arm position has risen 90 degrees relative to the x-axis:
+**1. Overall measures in time range (time series):** this analytic visualizes all the measures included in the given time range.<br>
+In the following view, it is highlighted the event occurred at 18:12:16 in which the robotic arm position has risen 90 degrees relative to the x-axis:<br>
 <img width="1856" height="823" alt="Grafana-UC4-1" src="https://github.com/user-attachments/assets/67463fbc-e691-44ed-93dd-b03b96c571f6" />
 
 InfluxDB query underlying the analytic:
@@ -139,9 +139,9 @@ InfluxDB query underlying the analytic:
 from(bucket: "air5-eda-uc4-data")
 |> range(start: v.timeRangeStart, stop: v.timeRangeStop)
 ```
-**2. Multi-Axis Current vs. Vibration (Time Series):** this analytic visualizes the relation between multi-axis current and vibration in the given time range.
-Since you have two axes working at once, it is critical to see if a spike in current leads to a spike in vibration.
-Visualization: Combined Time Series graph.
+**2. Multi-Axis Current vs. Vibration (Time Series):** this analytic visualizes the relation between multi-axis current and vibration in the given time range.<br>
+Since you have two axes working at once, it is critical to see if a spike in current leads to a spike in vibration.<br>
+Visualization: Combined Time Series graph.<br>
 What to look for: Axis 2 (y-axis: the shoulder) shows much higher current (6A - 8A) than Axis 1 (1A - 2A). Use two Y-axes: one for current_amp (Left) and one for vibration_mm_s (Right).
 Insight: If Axis 2 vibration increases while the current remains steady, it indicates mechanical wear or a loose bolt. If both spike, it indicates the robot is struggling with a heavy load.<br>
 <img width="1622" height="823" alt="Grafana-UC4-2" src="https://github.com/user-attachments/assets/018142ec-cca8-4b43-b6aa-daaf87ca02c1" />
@@ -173,7 +173,7 @@ from(bucket: "air5-eda-uc4-data")
 |> aggregateWindow(every: v.windowPeriod, fn: mean, createEmpty: false) 
 |> yield(name: "thermal_load")
 ```
-**4. Axis Position "Trailing" (Scatter Plot or XY Chart):** This visualization helps understand the "duty cycle" or the physical path the robot is taking.
+**4. Axis Position "Trailing" (Scatter Plot or XY Chart):** This visualization helps understand the "duty cycle" or the physical path the robot is taking.<br>
 Looking at data, x-axis is rotating steadily (from 45 to 57 degrees), while y-axis is slightly dipping (from 10.0 to 8.6 degrees). Plotting these allows you to visualize the "envelope" of the movement. If the lines become jagged, the robot is losing precision.<br>
 <img width="1376" height="737" alt="Grafana-UC4-4" src="https://github.com/user-attachments/assets/4f33a002-e2ae-4fd2-acf6-29aa1237cd2c" />
 
