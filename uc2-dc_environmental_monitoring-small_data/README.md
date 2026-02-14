@@ -1,6 +1,6 @@
 # Use Case 2: Data center environmental monitoring (small data)
 
-Monitoring of a data center environmental measures expressede in SenML standard.
+Monitoring of a data center environmental measures expressed in SenML standard.
 
 ## Use Case reference:
 - Small dataset (100 records)
