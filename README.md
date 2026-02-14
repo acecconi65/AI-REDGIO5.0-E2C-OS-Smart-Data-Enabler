@@ -2,7 +2,7 @@
 
 Smart Data Enabler is a basic stack consisting in an AI Edge-to-Cloud (E2C) minimum viable application using AI REDGIO 5.0 recommended Open-Source (OS) tools. 
 
-It is a technological demo showing how a very simple architecture based on open source tools recommended in the project allows SMEs to obtain useful analytical insights from their process data even in conditions of limited maturity and complexity, with reduced technological skills and practically zero costs/investments.
+It is a technological demo showing how a very simple architecture based on open source tools recommended in the project allows SMEs to obtain useful analytical insights from their process data even in conditions of limited maturity and complexity, with reduced technological expertise and practically zero costs/investments.
 
 ## Scenario
 
