@@ -60,7 +60,7 @@ services:
     volumes:
       - grafana-storage:/var/lib/grafana
 volumes:
-  # definizione dei volumi persistenti
+  # persistent volumes definition
   nifi_conf:
     driver: local
   nifi_db:
